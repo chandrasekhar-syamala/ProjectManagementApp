@@ -1,0 +1,12 @@
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\bin\Debug\net10.0\ProjectManagement.Domain.deps.json
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\bin\Debug\net10.0\ProjectManagement.Domain.dll
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\bin\Debug\net10.0\ProjectManagement.Domain.pdb
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.AssemblyInfoInputs.cache
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.AssemblyInfo.cs
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.sourcelink.json
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.dll
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\refint\ProjectManagement.Domain.dll
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ProjectManagement.Domain.pdb
+C:\Users\Chandu\Portfolio\ProjectManagementApp\ProjectManagement.Domain\obj\Debug\net10.0\ref\ProjectManagement.Domain.dll

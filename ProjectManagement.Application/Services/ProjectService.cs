@@ -1,60 +1,63 @@
 using ProjectManagement.Domain.Entities;
 using ProjectManagement.Domain.Interfaces;
 
-public class ProjectService
+namespace ProjectManagement.Application.Services
 {
-    private readonly IProjectRepository _projectRepository;
-
-    public ProjectService(IProjectRepository projectRepository)
+    public class ProjectService
     {
-        _projectRepository = projectRepository;
-    }
+        private readonly IProjectRepository _projectRepository;
 
-    //Fetch All Projects
-    public async Task<IEnumerable<Project>> GetAllProjectsAsync()
-    {
-        return await _projectRepository.GetAllProjectsAsync();
-    }
-
-    //Fetch Project By Id
-    public async Task<Project?> GetProjectByIdAsync(int projectId)
-    {
-        return await _projectRepository.GetProjectByIdAsync(projectId);
-    }
-
-    //Add New Project
-    public async Task AddProjectAsync(string name, string? description = null)
-    {
-        var project = new Project(name, description);
-        await _projectRepository.AddProjectAsync(project);
-    }
-
-    //Update Existing Project
-    public async Task UpdateProjectAsync(int projectId, string name, string? description = null)
-    {
-        var project = await _projectRepository.GetProjectByIdAsync(projectId);
-        if (project != null)
+        public ProjectService(IProjectRepository projectRepository)
         {
-            project.UpdateName(name);
-            project.UpdateDescription(description);
-            await _projectRepository.UpdateProjectAsync(project);
+            _projectRepository = projectRepository;
         }
-    }
 
-    //Delete Project
-    public async Task DeleteProjectAsync(int projectId)
-    {
-        await _projectRepository.DeleteProjectAsync(projectId);
-    }
-
-    //Toggle Project Status
-    public async Task ToggleProjectStatusAsync(int projectId)
-    {
-        var success = await _projectRepository.ToggleProjectStatusAsync(projectId);
-
-        if (!success)
+        //Fetch All Projects
+        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
         {
-            throw new Exception($"Project with ID {projectId} not found or cannot be toggled.");
+            return await _projectRepository.GetAllProjectsAsync();
+        }
+
+        //Add New Project
+        public async Task AddProjectAsync(string name, string? description = null)
+        {
+            var project = new Project(name, description);
+            await _projectRepository.AddProjectAsync(project);
+        }
+
+        //Toggle Project Status
+        public async Task ToggleProjectStatusAsync(int projectId)
+        {
+            var success = await _projectRepository.ToggleProjectStatusAsync(projectId);
+
+            if (!success)
+            {
+                throw new Exception($"Project with ID {projectId} not found or cannot be toggled.");
+            }
+        }
+
+        //Fetch Project By Id
+        public async Task<Project?> GetProjectByIdAsync(int projectId)
+        {
+            return await _projectRepository.GetProjectByIdAsync(projectId);
+        }
+
+        //Update Existing Project
+        public async Task UpdateProjectAsync(int projectId, string name, string? description = null)
+        {
+            var project = await _projectRepository.GetProjectByIdAsync(projectId);
+            if (project != null)
+            {
+                project.UpdateName(name);
+                project.UpdateDescription(description);
+                await _projectRepository.UpdateProjectAsync(project);
+            }
+        }
+
+        //Delete Project
+        public async Task DeleteProjectAsync(int projectId)
+        {
+            await _projectRepository.DeleteProjectAsync(projectId);
         }
     }
 }

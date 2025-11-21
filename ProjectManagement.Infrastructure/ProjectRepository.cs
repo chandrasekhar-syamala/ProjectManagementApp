@@ -18,13 +18,6 @@ public class ProjectRepository : IProjectRepository
         return await _dbContext.Projects.ToListAsync();
     }
 
-    //Fetch Project By Id
-    public async Task<Project?> GetProjectByIdAsync(int projectId)
-    {
-        return await _dbContext.Projects
-            .FirstOrDefaultAsync(p => p.ProjectId == projectId);
-    }
-
     //Add New Project
     public async Task AddProjectAsync(Project project)
     {
@@ -32,10 +25,32 @@ public class ProjectRepository : IProjectRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    //Toggle Project Status
+    public async Task<bool> ToggleProjectStatusAsync(int projectId)
+    {
+        var project = await _dbContext.Projects.FindAsync(projectId);
+        if (project == null)
+        {
+            return false;
+        }
+
+        project.Toogle();
+        _dbContext.Projects.Update(project);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+    //Fetch Project By Id
+    public async Task<Project?> GetProjectByIdAsync(int projectId)
+    {
+        return await _dbContext.Projects
+            .FirstOrDefaultAsync(p => p.ProjectId == projectId);
+    }
+
     //Update Existing Project
     public async Task UpdateProjectAsync(Project project)
     {
-        await _dbContext.Projects.Update(project);
+        _dbContext.Projects.Update(project);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -48,21 +63,5 @@ public class ProjectRepository : IProjectRepository
             _dbContext.Projects.Remove(project);
             await _dbContext.SaveChangesAsync();
         }
-    }
-
-    //Toggle Project Status
-    public async Task<bool> ToggleProjectStatusAsync(int projectId)
-    {
-        var project = await _context.Projects.FindAsync(projectId);
-        if (project == null)
-        {
-            return false;
-        }
-
-        project.Toogle();
-        _dbContext.Projects.Update(project);
-        await _dbContext.SaveChangesAsync();
-
-        return true;
     }
 }

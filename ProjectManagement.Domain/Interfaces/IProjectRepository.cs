@@ -1,13 +1,14 @@
 using ProjectManagement.Domain.Entities;
 
-public interface IProjectRepository
+namespace ProjectManagement.Domain.Interfaces
 {
-    Task<IEnumerable<Project>> GetAllProjectsAsync();
-    Task<Project?> GetProjectByIdAsync(int projectId);
-    Task AddProjectAsync(Project project);
-    Task UpdateProjectAsync(Project project);
-    Task DeleteProjectAsync(int projectId);
-    Task<bool> ToggleProjectStatusAsync(int projectId);
-
-
+    public interface IProjectRepository
+    {
+        Task<IEnumerable<Project>> GetAllProjectsAsync();
+        Task<Project?> GetProjectByIdAsync(int projectId);
+        Task AddProjectAsync(Project project);
+        Task UpdateProjectAsync(Project project);
+        Task DeleteProjectAsync(int projectId);
+        Task<bool> ToggleProjectStatusAsync(int projectId);
+    }
 }
