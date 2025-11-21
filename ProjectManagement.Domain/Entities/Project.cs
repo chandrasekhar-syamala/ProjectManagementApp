@@ -1,37 +1,40 @@
-namespace ProjectManagement.Domain.Entities;
-
-public class Project
+namespace ProjectManagement.Domain.Entities
 {
-    public int ProjectId { get; private set; }
-    public string ProjectName { get; private set; }
-    public string? Description { get; private set; }
-    public bool IsActive { get; private set; }
-
-    public Project(string name, string? description = null)
+    public class Project
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Project name cannot be empty.");
+        public int ProjectId { get; private set; }
+        public string ProjectName { get; private set; } = string.Empty;
+        public string? Description { get; private set; }
+        public bool IsActive { get; private set; }
 
-        ProjectName = name;
-        Description = description;
-        IsActive = true;
-    }
+        private Project() { }
 
-    public void Toogle()
-    {
-        IsActive = !IsActive;
-    }
+        public Project(string name, string? description = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Project name cannot be empty.");
 
-    public void UpdateDescription(string? description)
-    {
-        Description = description;
-    }
+            ProjectName = name;
+            Description = description;
+            IsActive = true;
+        }
 
-    public void UpdateName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Project name cannot be empty.");
+        public void Toogle()
+        {
+            IsActive = !IsActive;
+        }
 
-        ProjectName = name;
+        public void UpdateDescription(string? description)
+        {
+            Description = description;
+        }
+
+        public void UpdateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Project name cannot be empty.");
+
+            ProjectName = name;
+        }
     }
 }

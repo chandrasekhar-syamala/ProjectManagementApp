@@ -1,26 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Domain.Entities;
 
-namespace ProjectManagement.Infrastructure;
-
-public class AppDbContext : DbContext
+namespace ProjectManagement.Infrastructure
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public class AppDbContext : DbContext
     {
-    }
-
-    public DbSet<Project> Projects { get; set; } = null!;
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Project>(entity =>
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            entity.HasKey(e => e.ProjectId);
-            entity.Property(e => e.ProjectName).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Description).HasMaxLength(1000);
-            entity.Property(e => e.IsActive).IsRequired();
-        });
+        }
+
+        public DbSet<Project> Projects { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Project>(entity =>
+            {
+                entity.HasKey(e => e.ProjectId);
+                entity.Property(e => e.ProjectName).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Description).HasMaxLength(1000);
+                entity.Property(e => e.IsActive).IsRequired();
+            });
+        }
     }
 }
