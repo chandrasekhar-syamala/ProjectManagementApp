@@ -1,70 +1,146 @@
-// src/pages/Home.jsx
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { closeForm, openAddForm } from "../store/projectFormSlice";
+
+
+import { Box, Typography, Divider, Button, Stack, Collapse, Snackbar, Alert } from "@mui/material";
+
+import AddOrUpdateProjectForm from "../components/AddOrUpdateProjectForm";
+import ProjectList from "../components/ProjectList";
+
 import {
     fetchAllProjects,
     addProject,
-    deleteProject,
     toggleProjectStatus,
+    updateProject,
+    deleteProject
 } from "../api/projectApi";
 
-import ProjectList from "../components/ProjectList";
-import AddProjectForm from "../components/AddOrUpdateProjectForm";
+import useAlerts from "../utils/useAlerts";
 
 export default function Home() {
     const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    
+    const { alert, showSuccess, showError, closeAlert } = useAlerts();
+    const { editingProjectId, isFormOpen } = useSelector((state) => state.projectForm);
 
-    async function loadProjects() {
+    const dispatch = useDispatch();
+
+    const loadProjects = async () => {
         try {
-            setLoading(true);
-            setError("");
             const data = await fetchAllProjects();
             setProjects(data);
         } catch (err) {
-            setError(err.message || "Failed to load projects");
-        } finally {
-            setLoading(false);
+            console.error("Error loading projects:", err);
         }
-    }
+    };
 
     useEffect(() => {
         loadProjects();
     }, []);
 
-    async function handleAdd(name, description) {
+    const handleAddProject = async (name, description) => {
         try {
             await addProject(name, description);
-            await loadProjects();
-        } catch {
-            alert("Failed to add project.");
+            loadProjects();
+            showSuccess("Project added successfully!");
+        } catch (err) {
+            console.error("Error adding project:", err);
+            showError("Failed to add project.");
+        } finally {
+            dispatch(closeForm());
         }
-    }
+    };
 
-    async function handleToggle(id) {
-        await toggleProjectStatus(id);
-        loadProjects();
-    }
+    const handleToggleProject = async (projectId) => {
+        try {
+            await toggleProjectStatus(projectId);
+            loadProjects();
+            showSuccess("Project status toggled successfully!");
+        } catch (err) {
+            console.error("Error toggling project status:", err);
+            showError("Failed to toggle project status.");
+        }
+    };
 
-    async function handleDelete(id) {
-        await deleteProject(id);
-        loadProjects();
-    }
+    const handleUpdateProject = async (projectId, name, description) => {
+        try {
+            await updateProject(projectId, name, description);
+            loadProjects();
+            showSuccess("Project details updated successfully!");
+        } catch (err) {
+            console.error("Error updating project:", err);
+            showError("Failed to update project.");
+        } finally {
+            dispatch(closeForm());
+        }
+    };
+
+    const handleDeleteProject = async (projectId) => {
+        try {
+            await deleteProject(projectId);
+            loadProjects();
+            showSuccess("Project deleted successfully!");
+        } catch (err) {
+            console.error("Error deleting project:", err);
+            showError("Failed to delete project.");
+        } 
+    };
 
     return (
-        <div style={{ padding: 20 }}>
-            <h1>Project Management</h1>
+        <>
+        <Box sx={{ width: "100%" }}>
+            <Typography variant="h4" fontWeight={700} sx={{ mb: 3 }}>
+                Project Management
+            </Typography>
 
-            {loading && <p>Loading...</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {/* Add Project Button */}
+            <Stack direction="row" justifyContent="flex-start" sx={{ mb: 2 }}>
+                <Button
+                    variant="contained"
+                    onClick={() => {
+                        if (isFormOpen) {
+                            dispatch(closeForm());
+                        } else {
+                            dispatch(openAddForm());
+                        }
+                    }}
+                >
+                    {isFormOpen ? "Cancel" : editingProjectId ? "Update Project" : "Add Project"}
+                </Button>
+            </Stack>
 
-            <AddProjectForm onAdd={handleAdd} />
+            {/* Conditionally show form */}
+            {isFormOpen && (
+                <>
+                    <AddOrUpdateProjectForm onAdd={handleAddProject} onUpdate={handleUpdateProject} />
+                    <Divider sx={{ my: 3 }} />
+                </>
+            )}
 
+            {/* Project List */}
             <ProjectList
                 projects={projects}
-                onToggle={handleToggle}
-                onDelete={handleDelete}
+                onToggle={handleToggleProject}
+                onDelete={handleDeleteProject}
             />
-        </div>
+        </Box>
+        <Snackbar
+    open={alert.open}
+    autoHideDuration={3000}
+    onClose={closeAlert}
+    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+    <Alert
+        onClose={closeAlert}
+        severity={alert.severity}
+        variant="filled"     // solid color
+        sx={{ width: "100%" }}
+    >
+        {alert.message}
+    </Alert>
+</Snackbar>
+        </>
     );
 }

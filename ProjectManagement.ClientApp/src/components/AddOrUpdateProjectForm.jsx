@@ -1,9 +1,18 @@
-// src/components/AddProjectForm.jsx
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateName, updateDescription } from "../store/projectFormSlice";
 
-export default function AddOrUpdateProjectForm({ onAdd }) {
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
+import {
+    TextField,
+    Button,
+    Paper,
+    Stack,
+    Typography
+} from "@mui/material";
+
+export default function AddProjectForm({ onAdd, onUpdate }) {
+    
+    const dispatch = useDispatch();
+    const { name, description, editingProjectId } = useSelector((state) => state.projectForm);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -11,31 +20,45 @@ export default function AddOrUpdateProjectForm({ onAdd }) {
             alert("Project name is required");
             return;
         }
-
-        onAdd(name, description);
-        setName("");
-        setDescription("");
+        if (editingProjectId) {
+            onUpdate(editingProjectId, name, description);
+        } else {
+            onAdd(name, description);
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-            <input
-                type="text"
-                placeholder="Project Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                style={{ marginRight: 10 }}
-            />
+        <Paper elevation={3} sx={{ padding: 3, marginBottom: 4, borderRadius: 3 }}>
+            <Typography variant="h6" gutterBottom>
+                { editingProjectId ? "Update Project" : "Add New Project" }
+            </Typography>
 
-            <input
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{ marginRight: 10 }}
-            />
+            <form onSubmit={handleSubmit}>
+                <Stack spacing={2}>
+                    <TextField
+                        label="Project Name"
+                        variant="outlined"
+                        fullWidth
+                        value={name}
+                        onChange={(e) => dispatch(updateName(e.target.value))}
+                        required
+                    />
 
-            <button type="submit">Add Project</button>
-        </form>
+                    <TextField
+                        label="Description"
+                        variant="outlined"
+                        fullWidth
+                        multiline
+                        rows={3}
+                        value={description}
+                        onChange={(e) => dispatch(updateDescription(e.target.value))}
+                    />
+
+                    <Button variant="contained" color="primary" type="submit">
+                        {editingProjectId ? "Update Project" : "Add Project"}
+                    </Button>
+                </Stack>
+            </form>
+        </Paper>
     );
 }

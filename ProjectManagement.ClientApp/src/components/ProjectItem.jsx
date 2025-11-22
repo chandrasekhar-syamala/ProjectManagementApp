@@ -1,30 +1,88 @@
-// src/components/ProjectItem.jsx
+import React from "react";
+import { useDispatch } from 'react-redux';
+import { openEditForm } from "../store/projectFormSlice";
+
+import {
+    Card,
+    CardContent,
+    CardActions,
+    Typography,
+    Button,
+    Chip,
+    Stack
+} from "@mui/material";
+
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+
 export default function ProjectItem({ project, onToggle, onDelete }) {
+    const dispatch = useDispatch();
+    
     return (
-        <div
-            style={{
-                padding: 10,
-                border: "1px solid #ddd",
-                marginBottom: 10,
-                borderRadius: 6,
-            }}
-        >
-            <h3>{project.projectName}</h3>
-            <p>{project.description}</p>
-            <p>
-                Status:{" "}
-                <strong style={{ color: project.isActive ? "green" : "red" }}>
-                    {project.isActive ? "Active" : "Inactive"}
-                </strong>
-            </p>
+        <Card elevation={3} sx={{ borderRadius: 3 }}>
+            <CardContent>
+                <Typography variant="h6" component="div" gutterBottom>
+                    {project.projectName}
+                </Typography>
 
-            <button onClick={() => onToggle(project.projectId)} style={{ marginRight: 10 }}>
-                Toggle Status
-            </button>
+                {project.description && (
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1 }}
+                    >
+                        {project.description}
+                    </Typography>
+                )}
 
-            <button onClick={() => onDelete(project.projectId)} style={{ color: "red" }}>
-                Delete
-            </button>
-        </div>
+                <Chip
+                    label={project.isActive ? "Active" : "Inactive"}
+                    color={project.isActive ? "success" : "default"}
+                    size="small"
+                    sx={{ mt: 1 }}
+                />
+            </CardContent>
+
+            <CardActions sx={{ justifyContent: "flex-end" }}>
+                <Button
+                    size="small"
+                    variant="contained"
+                    startIcon={project.isActive ? <ToggleOffIcon /> : <ToggleOnIcon />}
+                    color={project.isActive ? "warning" : "primary"}
+                    onClick={() => onToggle(project.projectId)}
+                >
+                    Toggle
+                </Button>
+
+                <Button
+                    size="small"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<EditIcon />}
+                    onClick={() =>
+                        dispatch(openEditForm({
+                            id: project.projectId,
+                            name: project.projectName,
+                            description: project.description,
+                        }))
+}
+
+                >
+                    Edit
+                </Button>
+
+                <Button
+                    size="small"
+                    variant="contained"
+                    color="error"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => onDelete(project.projectId)}
+                >
+                    Delete
+                </Button>
+            </CardActions>
+        </Card>
     );
 }

@@ -1,22 +1,38 @@
-// src/components/ProjectList.jsx
+import { Box, Grid, Typography } from "@mui/material";
 import ProjectItem from "./ProjectItem";
 
 export default function ProjectList({ projects, onToggle, onDelete }) {
-    
-    if (!Array.isArray(projects) || projects.length === 0) {
-        return <p>No projects available.</p>;
+    if (projects.length === 0) {
+        return (
+            <Box 
+                sx={{
+                    width: "100%",
+                    textAlign: "center",
+                    paddingY: 8,
+                    opacity: 0.6
+                }}
+            >
+                <Typography variant="h6">
+                    No projects found.
+                </Typography>
+                <Typography variant="body2" color="text.warning">
+                    Add a project to get started.
+                </Typography>
+            </Box>
+        );
     }
 
     return (
-        <div>
-            {projects.map((p) => (
-                <ProjectItem
-                    key={p.projectId}
-                    project={p}
-                    onToggle={onToggle}
-                    onDelete={onDelete}
-                />
+        <Grid container spacing={2}>
+            {projects.map((project) => (
+                <Grid item xs={12} sm={6} md={6} key={project.projectId}>
+                    <ProjectItem
+                        project={project}
+                        onToggle={onToggle}
+                        onDelete={onDelete}
+                    />
+                </Grid>
             ))}
-        </div>
+        </Grid>
     );
 }
